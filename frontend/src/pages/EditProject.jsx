@@ -1,12 +1,15 @@
-import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import Input from '../components/Input';
 import Button from '../components/Button';
 
-const CreateProject = () => {
+const EditProject = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
+  
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -15,10 +18,39 @@ const CreateProject = () => {
     description: '',
     githubUrl: '',
     demoUrl: '',
-    techStack: '', // We will split this by comma before sending
+    techStack: '',
     status: 'Up for Adoption',
     whatsLeft: ''
   });
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const res = await fetch(`/api/projects/${id}`);
+        const data = await res.json();
+        
+        if (res.ok) {
+          setFormData({
+            title: data.title,
+            description: data.description,
+            githubUrl: data.githubUrl,
+            demoUrl: data.demoUrl || '',
+            techStack: data.techStack ? data.techStack.join(', ') : '',
+            status: data.status,
+            whatsLeft: data.whatsLeft || ''
+          });
+        } else {
+          setError(data.message || 'Project not found');
+        }
+      } catch (err) {
+        setError('Failed to fetch project');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +64,8 @@ const CreateProject = () => {
         techStack: formData.techStack.split(',').map(tech => tech.trim()).filter(Boolean)
       };
 
-      const res = await fetch('/api/projects', {
-        method: 'POST',
+      const res = await fetch(`/api/projects/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -44,9 +76,9 @@ const CreateProject = () => {
       const data = await res.json();
 
       if (res.ok) {
-        navigate('/dashboard');
+        navigate(`/projects/${id}`);
       } else {
-        setError(data.message || 'Failed to create project');
+        setError(data.message || 'Failed to update project');
       }
     } catch (err) {
       setError('Cannot connect to server.');
@@ -55,10 +87,13 @@ const CreateProject = () => {
     }
   };
 
+  if (loading) return <div className="text-center py-20 text-textMuted">Loading project...</div>;
+  if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
+
   return (
     <div className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-medium text-textMain mb-2">Upload a Project</h1>
-      <p className="text-textMuted mb-8">Share an abandoned project so others can learn or continue it.</p>
+      <h1 className="text-3xl font-medium text-textMain mb-2">Edit Project</h1>
+      <p className="text-textMuted mb-8">Update the details of your uploaded project.</p>
 
       <form onSubmit={handleSubmit} className="bg-surface border border-border p-6 md:p-8 rounded-xl space-y-4">
         
@@ -138,9 +173,9 @@ const CreateProject = () => {
         )}
 
         <div className="pt-4 border-t border-border flex justify-end gap-3">
-          <Button type="button" variant="ghost" onClick={() => navigate('/dashboard')}>Cancel</Button>
+          <Button type="button" variant="ghost" onClick={() => navigate(`/projects/${id}`)}>Cancel</Button>
           <Button type="submit" variant="primary" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit Project'}
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </form>
@@ -148,4 +183,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default EditProject;

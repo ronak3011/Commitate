@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const MainLayout = () => {
   return (
@@ -10,9 +11,7 @@ const MainLayout = () => {
         <Outlet />
       </main>
 
-      <footer className="py-8 text-center text-sm text-textMuted border-t border-border mt-auto">
-        Every project deserves another commit.
-      </footer>
+      <Footer />
     </div>
   );
 };

@@ -4,6 +4,8 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import applicationRoutes from './routes/applicationRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -15,6 +17,8 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.get('/', (req, res) => {
   res.send('SecondCommit API is running...');

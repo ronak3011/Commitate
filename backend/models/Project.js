@@ -9,8 +9,8 @@ const projectSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ['Abandoned', 'Seeking Maintainer', 'Needs Contributors', 'Adopted', 'Archived'],
-    default: 'Abandoned'
+    enum: ['Up for Adoption', 'Seeking Maintainer', 'Needs Contributors', 'Adopted', 'Archived'],
+    default: 'Up for Adoption'
   },
   completionPercentage: { type: Number, default: 0 },
   whatsLeft: { type: String, required: true },
@@ -20,6 +20,11 @@ const projectSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User' // Tells Mongoose this ID belongs to the User collection
+  },
+  // If the project is adopted, this stores who adopted it
+  adopter: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   timestamps: true // Automatically adds createdAt and updatedAt

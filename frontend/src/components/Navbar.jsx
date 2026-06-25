@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Button from './Button';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Inbox } from 'lucide-react';
 import { LogoA } from './Logos';
 
 const Navbar = () => {
@@ -45,18 +45,33 @@ const Navbar = () => {
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
+            <Link to="/#how-it-works" className="text-sm font-medium text-textMuted hover:text-textMain transition-colors hidden md:block">
+              How it Works
+            </Link>
+
             <Link to="/projects" className="text-sm font-medium text-textMuted hover:text-textMain transition-colors">
               Browse Projects
             </Link>
 
             {/* Conditional Rendering based on Auth State */}
             {user ? (
-              <>
-                <Link to="/dashboard">
-                  <Button variant="secondary">Dashboard</Button>
+              <div className="flex items-center space-x-4">
+                <Link to="/dashboard" className="text-sm font-medium text-textMuted hover:text-textMain transition-colors flex items-center gap-2">
+                  <Inbox className="h-4 w-4" />
+                  Inbox
                 </Link>
-                <Button variant="ghost" onClick={logout}>Logout</Button>
-              </>
+                
+                <div className="h-4 w-px bg-gray-300 dark:bg-[#444] hidden sm:block"></div>
+
+                <Link to={`/user/${user._id}`} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                  <div className="w-7 h-7 rounded-full bg-surfaceHover border border-border flex items-center justify-center text-xs font-bold text-textMain">
+                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <span className="text-sm font-medium text-textMain hidden sm:block">{user.name}</span>
+                </Link>
+
+                <Button variant="ghost" onClick={logout} className="ml-2">Logout</Button>
+              </div>
             ) : (
               <>
                 <Link to="/login" className="text-sm font-medium text-textMuted hover:text-textMain transition-colors px-3">
