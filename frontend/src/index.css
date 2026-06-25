@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* LIGHT MODE VARIABLES */
+  :root {
+    --bg-color: #FFFFFF;
+    --surface-color: #FAFAFA;
+    --surface-hover: #F0F0F0;
+    --border-color: #EAEAEA;
+    --text-main: #171717;
+    --text-muted: #666666;
+    --primary: #34C77B;
+    --primary-hover: #2AB368;
+    --tag-bg: #EAEAEA;
+    --tag-text: #666666;
+  }
+
+  /* DARK MODE VARIABLES */
+  .dark {
+    --bg-color: #0C0C0C;
+    --surface-color: #111111;
+    --surface-hover: #1A1A1A;
+    --border-color: #1E1E1E;
+    --text-main: #F5F5F5;
+    --text-muted: #6B6B6B;
+    --primary: #34C77B;
+    --primary-hover: #2AB368;
+    --tag-bg: #1A1A1A;
+    --tag-text: #6B6B6B;
+  }
+
+  body {
+    @apply bg-background text-textMain antialiased selection:bg-primary selection:text-[var(--bg-color)] font-sans transition-colors duration-300 font-normal;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium;
+  }
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+}
