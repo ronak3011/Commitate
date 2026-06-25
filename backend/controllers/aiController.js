@@ -32,9 +32,8 @@ export const analyzeProject = async (req, res) => {
       Pending Tasks: ${project.whatsLeft || 'None specified'}
     `;
 
-    // Call the Gemini model
-    const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash',
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
