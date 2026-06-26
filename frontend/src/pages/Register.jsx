@@ -17,6 +17,20 @@ const Register = () => {
     e.preventDefault();
     setError('');
 
+    // Regex Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
+    if (!emailRegex.test(email)) {
+      setError('Please provide a valid email address.');
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setError('Password must be at least 6 characters and contain both letters and numbers.');
+      return;
+    }
+
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',

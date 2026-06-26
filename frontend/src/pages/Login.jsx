@@ -16,6 +16,13 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
+    // Regex Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please provide a valid email address.');
+      return;
+    }
+
     try {
       // Using our new Vite proxy!
       const res = await fetch('/api/auth/login', {

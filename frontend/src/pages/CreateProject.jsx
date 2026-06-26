@@ -23,6 +23,22 @@ const CreateProject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Regex Validation for GitHub URL
+    const githubUrlRegex = /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
+    if (!githubUrlRegex.test(formData.githubUrl)) {
+      setError('Please provide a valid GitHub repository URL (e.g., https://github.com/username/repo)');
+      return;
+    }
+
+    // Regex Validation for Tech Stack (Allow letters, numbers, spaces, dots, commas, hyphens, plus, hash)
+    // This allows things like C++, C#, Vue.js, React-Native, but blocks $, %, <script>, etc.
+    const techStackRegex = /^[A-Za-z0-9\s.,\-+#]+$/;
+    if (formData.techStack && !techStackRegex.test(formData.techStack)) {
+      setError('Tech stack can only contain letters, numbers, commas, and basic symbols (+, -, #, .)');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
