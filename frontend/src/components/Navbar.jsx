@@ -10,6 +10,9 @@ const Navbar = () => {
   
   // Theme state (default to dark)
   const [isDark, setIsDark] = useState(true);
+  
+  // Logout Modal State
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Apply the dark class to the HTML document when state changes
   useEffect(() => {
@@ -21,8 +24,9 @@ const Navbar = () => {
   }, [isDark]);
 
   return (
-    <nav className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <>
+      <nav className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
           {/* Logo Section */}
@@ -70,7 +74,13 @@ const Navbar = () => {
                   <span className="text-sm font-medium text-textMain hidden sm:block">{user.name}</span>
                 </Link>
 
-                <Button variant="ghost" onClick={logout} className="ml-2">Logout</Button>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setShowLogoutModal(true)} 
+                  className="ml-2"
+                >
+                  Logout
+                </Button>
               </div>
             ) : (
               <>
@@ -85,8 +95,26 @@ const Navbar = () => {
           </div>
 
         </div>
-      </div>
-    </nav>
+        </div>
+      </nav>
+
+      {/* CUSTOM LOGOUT MODAL */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-fade-in">
+          <div className="bg-surface border border-border rounded-xl p-6 max-w-sm w-full shadow-2xl relative">
+            <h3 className="text-xl font-medium text-textMain mb-2">Sign Out</h3>
+            <p className="text-sm text-textMuted mb-6">Are you sure you want to log out of your account?</p>
+            <div className="flex justify-end gap-3">
+              <Button variant="ghost" onClick={() => setShowLogoutModal(false)}>Cancel</Button>
+              <Button variant="primary" onClick={() => {
+                setShowLogoutModal(false);
+                logout();
+              }}>Yes, Log out</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
