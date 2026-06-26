@@ -6,6 +6,8 @@ Most developers have abandoned projects sitting in a repository somewhere. Commi
 
 ---
 
+🌐 **Live Demo:** https://commitate.onrender.com/
+
 ## Features
 
 - **Browse Projects** – Discover unfinished projects and filter them by technology stack.
@@ -78,7 +80,6 @@ http://localhost:5173
 
 ## Future Improvements
 
-- GitHub repository integration
 - Project recommendation system
 - Team collaboration features
 - Contribution tracking
