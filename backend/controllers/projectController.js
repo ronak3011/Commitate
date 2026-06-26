@@ -9,7 +9,7 @@ export const getProjects = async (req, res) => {
     // .populate('owner', 'name') replaces the owner ID with the actual user's name
     // .populate('adopter', 'name') replaces the adopter ID with their name
     // .sort({ createdAt: -1 }) returns the newest projects first
-    const projects = await Project.find().populate('owner', 'name').populate('adopter', 'name').sort({ createdAt: -1 });
+    const projects = await Project.find().select('-githubUrl').populate('owner', 'name').populate('adopter', 'name').sort({ createdAt: -1 });
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -22,11 +22,35 @@ export const getProjects = async (req, res) => {
 export const getProjectById = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id).populate('owner', 'name').populate('adopter', 'name');
-    if (project) {
-      res.json(project);
-    } else {
-      res.status(404).json({ message: 'Project not found' });
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
     }
+
+    let canViewGithub = false;
+
+    if (req.user) {
+      // Is the user the owner?
+      if (project.owner && project.owner._id.toString() === req.user._id.toString()) {
+        canViewGithub = true;
+      } else {
+        // Did the owner approve this user's application?
+        const approvedApp = await Application.findOne({
+          project: project._id,
+          applicant: req.user._id,
+          status: 'Approved'
+        });
+        if (approvedApp) {
+          canViewGithub = true;
+        }
+      }
+    }
+
+    const projectObj = project.toObject();
+    if (!canViewGithub) {
+      delete projectObj.githubUrl;
+    }
+
+    res.json(projectObj);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -1,6 +1,6 @@
 import express from 'express';
 import { getProjects, getProjectById, createProject, deleteProject, getMyProjects, updateProject } from '../controllers/projectController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, optionalAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.delete('/:id', protect, deleteProject);
 
 // Public routes (Anyone can access)
 router.get('/', getProjects);
-router.get('/:id', getProjectById);
+router.get('/:id', optionalAuth, getProjectById);
 
 export default router;
